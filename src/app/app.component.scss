@@ -1,0 +1,12 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
+  margin: 0 auto;
+}
+
+// as of the time this code is being made, Angular renders `router-outlet` into the DOM as a sibling of route content.
+// this helps it to not cause trouble with styling
+router-outlet {
+  display: none;
+}

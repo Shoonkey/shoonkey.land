@@ -1,32 +1,37 @@
-import { TestBed } from "@angular/core/testing";
-import { AppComponent } from "./app.component";
+import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { ActivatedRoute } from "@angular/router";
+import { NoopAnimationsModule } from "@angular/platform-browser/animations";
+
+import { AppComponent } from "./app.component";
 
 describe("AppComponent", () => {
+  let component: AppComponent;
+  let fixture: ComponentFixture<AppComponent>;
+
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [AppComponent],
+      imports: [AppComponent, NoopAnimationsModule],
       providers: [
         {
           provide: ActivatedRoute,
-          useValue: {}
-        }
+          useValue: {
+            snapshot: { data: {} }
+          },
+        },
       ]
     }).compileComponents();
-  });
 
-  it("should create the app", () => {
-    const fixture = TestBed.createComponent(AppComponent);
-    const app = fixture.componentInstance;
-    expect(app).toBeTruthy();
-  });
-
-  it("should announce the beginning", () => {
-    const fixture = TestBed.createComponent(AppComponent);
+    fixture = TestBed.createComponent(AppComponent);
+    component = fixture.componentInstance;
     fixture.detectChanges();
+  });
+
+  it("should create", () => {
+    expect(component).toBeTruthy();
+  });
+
+  it("should contain a navbar with the title 'shoonkey.land'", () => {
     const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector("h1")?.textContent).toContain(
-      "mmm it begins",
-    );
+    expect(compiled.querySelector("nav")?.textContent).toContain("shoonkey.land");
   });
 });

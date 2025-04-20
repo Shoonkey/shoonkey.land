@@ -1,10 +1,26 @@
-import { Component } from "@angular/core";
 import { Routes } from "@angular/router";
-import { ExamplePageComponent } from "./pages/example-page/example-page.component";
+
+import { HomepageComponent } from "./pages/homepage/homepage.component";
+import { SongwritingToolComponent } from "./pages/songwriting-tool/songwriting-tool.component";
+import { TabbingToolComponent } from "./pages/tabbing-tool/tabbing-tool.component";
 
 export const routes: Routes = [
   {
-    path: "example",
-    component: ExamplePageComponent
-  }
+    path: "",
+    pathMatch: "full",
+    component: HomepageComponent,
+  },
+  {
+    path: "tool",
+    children: [
+      {
+        path: "tabbing",
+        component: TabbingToolComponent,
+      },
+      {
+        path: "songwriting",
+        component: SongwritingToolComponent,
+      },
+    ],
+  },
 ];
