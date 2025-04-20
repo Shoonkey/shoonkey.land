@@ -1,4 +1,4 @@
-name: Deploy app
+name: Build, test and deploy website
 
 on:
   push:
@@ -21,6 +21,8 @@ jobs:
           node-version: lts/*
       - name: install dependencies
         run: npm ci
+      - name: make sure all tests pass
+        run: npm run test:headless
       - name: build project
         run: npm run build
       - name: upload build
