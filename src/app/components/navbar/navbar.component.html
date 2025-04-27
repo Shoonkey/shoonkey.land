@@ -1,6 +1,9 @@
-<nav>
-  <a class="app-title" routerLink="/">shoonkey.land</a>
-  <ul>
+<nav
+  [class.open]="control.isOpen()"
+  class="flex justify-between items-center p-3"
+>
+  <a class="app-title text-2xl no-underline" routerLink="/">shoonkey.land</a>
+  <ul class="flex gap-4 list-none">
     <li><a routerLink="/tool/tabbing">tabbing</a></li>
     <li><a routerLink="/tool/songwriting">songwriting</a></li>
   </ul>

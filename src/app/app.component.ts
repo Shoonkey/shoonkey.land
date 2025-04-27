@@ -9,7 +9,7 @@ import { routeTransition } from "./animations/route-transition.animation";
   selector: "app-root",
   imports: [RouterOutlet, NavbarComponent, PageComponent],
   templateUrl: "./app.component.html",
-  styleUrl: "./app.component.scss",
+  styleUrl: "./app.component.css",
   animations: [routeTransition],
 })
 export class AppComponent {

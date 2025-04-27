@@ -1,10 +1,14 @@
-import { Component } from "@angular/core";
+import { Component, inject } from "@angular/core";
 import { RouterLink } from "@angular/router";
+
+import { NavbarService } from "../../services/navbar/navbar.service";
 
 @Component({
   selector: "app-navbar",
   imports: [RouterLink],
   templateUrl: "./navbar.component.html",
-  styleUrl: "./navbar.component.scss",
+  styleUrl: "./navbar.component.css"
 })
-export class NavbarComponent {}
+export class NavbarComponent {
+  protected control = inject(NavbarService);
+}

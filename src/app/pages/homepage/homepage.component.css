@@ -1,0 +1,29 @@
+:host {
+  display: contents;
+}
+
+section {
+  --animation-timing: 1.4s;
+
+  position: relative;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  transform: translateX(100%);
+  transition: transform var(--animation-timing) ease-out;
+}
+
+.animated section {
+  transform: translateX(0);
+}
+
+.fancy-bg-1 {
+  background: #2657eb;
+  background: linear-gradient(to right, #de6161, #2657eb);
+}
+
+.fancy-bg-2 {
+  background: #4568DC;
+  background: linear-gradient(to right, #B06AB3, #4568DC);
+}
