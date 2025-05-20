@@ -1,10 +1,8 @@
 import {
   Component,
-  ElementRef,
   inject,
   OnDestroy,
   OnInit,
-  viewChild,
 } from "@angular/core";
 
 import { NavbarService } from "../../services/navbar/navbar.service";
@@ -17,19 +15,14 @@ import { NavbarService } from "../../services/navbar/navbar.service";
 })
 export class HomepageComponent implements OnInit, OnDestroy {
   private navbarControl = inject(NavbarService);
-  private pageContainer =
-    viewChild.required<ElementRef<HTMLElement>>("pageContainer");
+  protected beginAnimation: boolean = false;
 
   ngOnInit(): void {
     this.navbarControl.setNavbarOpen(false);
-    setTimeout(() => this.startAnimation(), 400);
+    setTimeout(() => this.beginAnimation = true, 20);
   }
 
   ngOnDestroy(): void {
     this.navbarControl.setNavbarOpen(true);
-  }
-
-  startAnimation() {
-    this.pageContainer().nativeElement.classList.add("animated");
   }
 }

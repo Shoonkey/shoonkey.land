@@ -1,8 +1,7 @@
-<!-- TODO: make the multiple layers of animation show up properly instead of hiding each other -->
-<div class="fixed top-0 w-full h-full" #pageContainer>
-  <section aria-hidden="true" class="fancy-bg-1"></section>
-  <section aria-hidden="true" class="fancy-bg-2 delay-800"></section>
-  <section>
+<div class="fixed top-0 w-full h-full">
+  <section aria-hidden="true" class="fancy bg-1 z-0" [class.animate]="beginAnimation"></section>
+  <section aria-hidden="true" class="fancy bg-2 delay-600 z-10" [class.animate]="beginAnimation"></section>
+  <section [class.animate]="beginAnimation" class="ycnaf grid place-items-center delay-1000 z-20">
     <h1 class="text-black text-center font-bold text-3xl">
       Hi!<br />
       Welcome to my playroom

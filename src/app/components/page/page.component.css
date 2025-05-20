@@ -2,10 +2,10 @@
   width: var(--content-width);
   flex-grow: 1;
 
-  // allows route transitions to work without stacking content
+  /* allows route transitions to work without stacking content */
   position: relative;
 
-  // temporary
+  /* temporary */
   display: grid;
   place-items: center;
 }
