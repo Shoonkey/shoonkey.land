@@ -3,23 +3,19 @@
 }
 
 nav {
-  --toggle-transition-time: .6s;
-
   background: #1b1c22;
   font-family: Urbanist, sans-serif;
   font-weight: bold;
   letter-spacing: 0.6px;
   border-bottom: solid 1px var(--highlight-color);
-  transition: transform var(--toggle-transition-time);
-  transform: translateY(-100%);
+
+  &.closed {
+    display: none;
+  }
 }
 
 a {
   text-decoration: underline;
-}
-
-.open {
-  transform: translateY(0);
 }
 
 .app-title {
