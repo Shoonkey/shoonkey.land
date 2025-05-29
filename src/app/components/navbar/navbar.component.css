@@ -14,10 +14,6 @@ nav {
   }
 }
 
-a {
-  text-decoration: underline;
-}
-
 .app-title {
   color: var(--highlight-color);
 
