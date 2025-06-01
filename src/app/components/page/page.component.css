@@ -4,8 +4,4 @@
 
   /* allows route transitions to work without stacking content */
   position: relative;
-
-  /* temporary */
-  display: grid;
-  place-items: center;
 }

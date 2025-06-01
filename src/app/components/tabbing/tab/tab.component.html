@@ -1,0 +1,13 @@
+<div class="flex gap-1 text-white">
+  <ul class="tuning flex flex-col font-bold">
+    @for (note of processedTuning(); track $index) {
+      <li>{{ note }}</li>
+    }
+  </ul>
+  <div aria-hidden="true" class="w-[1px] bg-white"></div>
+  <ul class="music-fridge flex gap-0.5">
+    @for (line of processedTab(); track $index) {
+      <li><button class="flex flex-col"></button></li>
+    }
+  </ul>
+</div>
