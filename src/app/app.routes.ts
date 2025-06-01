@@ -6,6 +6,7 @@ import { TabbingToolComponent } from "./pages/tabbing-tool/tabbing-tool.componen
 
 export const routes: Routes = [
   {
+    title: "Playroom | shoonkey.land",
     path: "",
     pathMatch: "full",
     component: HomepageComponent,
@@ -14,6 +15,7 @@ export const routes: Routes = [
     path: "tool",
     children: [
       {
+        title: "Tabbo | shoonkey.land",
         path: "tabbing",
         component: TabbingToolComponent,
       },
