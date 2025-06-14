@@ -1,13 +1,13 @@
 import { Injectable } from "@angular/core";
 
-import { TabParserValidator } from "./tab-parser.validator";
 import {
-  ParsedTab,
   ChordLike,
   Fret,
   FretModifierFlags,
-  FRET_NAMED_REGEX,
-} from "./tab-parser.util";
+  ParsedTab,
+} from "../../common/tabbing.types";
+import { TabParserValidator } from "./tab-parser.validator";
+import { FRET_NAMED_REGEX } from "./tab-parser.util";
 
 type FretSearchData = {
   fret: Fret;
@@ -103,7 +103,7 @@ export class TabParserService {
     };
   }
 
-  parseTab(rawTab: string): ParsedTab | null {
+  parseTab(rawTab: string): ParsedTab {
     const trimmed = rawTab.trim();
     TabParserValidator.isNotEmpty(trimmed);
 

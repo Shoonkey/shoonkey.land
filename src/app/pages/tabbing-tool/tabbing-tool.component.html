@@ -1,18 +1,26 @@
 <div class="title-container text-center mb-8">
   <h1 class="text-2xl font-bold">Tabbo</h1>
-  <p class="text-sm">the tab tool for tabbing top, trivial, trendy or thematically tab-alicious thumping triumphant tabs</p>
+  <p class="text-sm">
+    the tab tool for tabbing top, trivial, trendy or thematically tab-alicious
+    thumping triumphant tabs
+  </p>
   <p class="text-xs">(alliteration is cool :3)</p>
 </div>
 
+<!-- TODO: List available tabs saved locally. Open them on click -->
+
 <div class="tab-container flex justify-center">
-  @if (activeTab) {
-    <app-tab [tab]="activeTab" />
+  @let tab = activeTab();
+  @if (tab) {
+    <app-tab [tab]="tab" [tuning]="standardTuning" />
   } @else {
     <p class="text-sm text-purple-300">No tab is active right now</p>
   }
 </div>
 <!-- TODO: <app-shortcut-list /> -->
-<!-- TODO: <app-fingerboard /> -->
 
-<textarea class="bg-gray-700 text-white" [(value)]="text" #a></textarea>
-<button class="bg-amber-500 px-2 mt-2 text-black self-center" (click)="saveTab(a.value)">go</button>
+<!-- TODO: Tapping a note on the fretboard should modify the tab accordingly -->
+<app-guitar-fretboard
+  [readableTuning]="standardTuning"
+  [fretAmount]="22"
+/>

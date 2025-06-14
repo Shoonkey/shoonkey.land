@@ -1,10 +1,7 @@
 import { Component, computed, inject, input } from "@angular/core";
 
+import { ParsedTab, Tuning } from "../../../common/tabbing.types";
 import { TabParserService } from "../../../services/tab-parser/tab-parser.service";
-
-function reverseString(s: string): string {
-  return s.split("").reverse().join("");
-}
 
 @Component({
   selector: "app-tab",
@@ -15,11 +12,8 @@ function reverseString(s: string): string {
 export class TabComponent {
   private tabParser = inject(TabParserService);
 
-  tuning = input<string>("EADGBe");
-  tab = input<string>("");
-
-  processedTuning = computed(() => reverseString(this.tuning()));
-  processedTab = computed(() => this.tabParser.parseTab(this.tab()));
+  tuning = input.required<Tuning>();
+  tab = input.required<ParsedTab>();
 
   saveTab(str: string) {}
 }

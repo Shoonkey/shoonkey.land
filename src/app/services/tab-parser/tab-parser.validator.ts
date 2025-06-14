@@ -1,5 +1,6 @@
+import { FretModifierFlags } from "../../common/tabbing.types";
 import { TabValidationError, TabValidationErrorCode } from "./tab-parser.error";
-import { FRET_REGEX, hasDigit, FretModifierFlags } from "./tab-parser.util";
+import { FRET_REGEX, hasDigit } from "./tab-parser.util";
 
 export class TabParserValidator {
   static isNotEmpty(text: string) {
