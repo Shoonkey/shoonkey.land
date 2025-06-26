@@ -1,7 +1,6 @@
-import { Component, computed, inject, input } from "@angular/core";
+import { Component, computed, input, output } from "@angular/core";
 
-import { ParsedTab, Tuning } from "../../../common/tabbing.types";
-import { TabParserService } from "../../../services/tab-parser/tab-parser.service";
+import { TabData } from "../common/tabbing.types";
 
 @Component({
   selector: "app-tab",
@@ -10,10 +9,15 @@ import { TabParserService } from "../../../services/tab-parser/tab-parser.servic
   styleUrl: "./tab.component.css",
 })
 export class TabComponent {
-  private tabParser = inject(TabParserService);
+  tabData = input.required<TabData>();
+  chordMode = input.required<boolean>();
+  selectedColumn = input<number | null>(null);
 
-  tuning = input.required<Tuning>();
-  tab = input.required<ParsedTab>();
+  onColumnClick = output<number>();
 
-  saveTab(str: string) {}
+  reversedTuning = computed(() => this.tabData().tuning.reverse());
+
+  updateSelectedColumn(idx: number) {
+    this.onColumnClick.emit(idx);
+  }
 }

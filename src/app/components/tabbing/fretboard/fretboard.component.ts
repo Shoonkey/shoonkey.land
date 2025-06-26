@@ -1,19 +1,24 @@
 import { Component, computed, input, model, output } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 
-import { Tuning } from "../../../common/tabbing.types";
+import {
+  FretPosition,
+  Instrument,
+  Note,
+  Tuning,
+} from "../common/tabbing.types";
 
 type FretLabel = string | number;
 type ViewMode = "note" | "number";
 
 @Component({
-  selector: "app-guitar-fretboard",
+  selector: "app-fretboard",
   imports: [FormsModule],
-  templateUrl: "./guitar-fretboard.component.html",
-  styleUrl: "./guitar-fretboard.component.css",
+  templateUrl: "./fretboard.component.html",
+  styleUrl: "./fretboard.component.css",
 })
-export class GuitarFretboardComponent {
-  octaveNotes = [
+export class FretboardComponent {
+  octaveNotes: Note[] = [
     "C",
     "C#",
     "D",
@@ -29,19 +34,22 @@ export class GuitarFretboardComponent {
   ];
 
   fretAmount = input.required<number>();
-  readableTuning = input.required<Tuning>();
+  instrument = input.required<Instrument>();
+  tuning = input.required<Tuning>();
   key = input<string>("");
 
   viewMode = model<ViewMode>("number");
 
-  noteTapped = output<number>();
+  fretTapped = output<FretPosition>();
   keyChanged = output<string>();
 
-  tuning = computed<Tuning>(() => this.readableTuning().reverse());
   fretboardArray = computed<FretLabel[][]>(() => this.getFretboardArray());
 
-  handleNoteTap(noteIdx: number) {
-    this.noteTapped.emit(noteIdx);
+  handleNoteTap(line: number, col: number) {
+    this.fretTapped.emit({
+      fretNum: col,
+      stringLine: line,
+    });
   }
 
   handleKeyChange(e: Event) {

@@ -1,21 +1,14 @@
 import { Injectable } from "@angular/core";
 
-import { RawTab, Tuning } from "../../common/tabbing.types";
+import {
+  SavedTabData,
+  TabID,
+} from "../../components/tabbing/common/tabbing.types";
 
 enum StoredData {
   NextTabID = "next-tab-id",
   TabIDs = "tab-ids",
   TabPrefix = "tab/",
-}
-
-type TabID = number;
-
-// TODO: Add `key` and `tuning` to the data being saved
-export interface SavedTab {
-  id: TabID;
-  // key?: string;
-  // tuning: Tuning;
-  data: RawTab;
 }
 
 @Injectable({
@@ -33,14 +26,15 @@ export class TabStorageManagerService {
     return isNaN(parsedID) ? defaultNextID : parsedID;
   }
 
-  getAllSavedTabs(): SavedTab[] {
-    const tabs: SavedTab[] = [];
+  getAllSavedTabs(): SavedTabData[] {
+    const tabs: SavedTabData[] = [];
 
     for (const tabID of this.getTabIDs()) {
-      const tabData = this.getTabByID(tabID);
+      const tab = this.getTabByID(tabID);
 
-      if (!tabData) this.removeTab(tabID);
-      else tabs.push({ id: tabID, data: tabData });
+      if (!tab) continue;
+
+      tabs.push(tab);
     }
 
     return tabs;
@@ -54,11 +48,13 @@ export class TabStorageManagerService {
     return commaSeparatedIDs.split(",").map(parseInt);
   }
 
-  getTabByID(tabID: TabID): RawTab | null {
+  getTabByID(tabID: TabID): SavedTabData | null {
     const key = StoredData.TabPrefix + tabID;
     const data = this.storage.getItem(key);
 
-    return data ?? null;
+    if (!data) return null;
+
+    return JSON.parse(data) as SavedTabData;
   }
 
   removeTabID(tabID: TabID) {
@@ -76,14 +72,14 @@ export class TabStorageManagerService {
     this.storage.removeItem(key);
   }
 
-  saveNewTab(rawTab: RawTab): number {
+  saveNewTab(tabData: SavedTabData): TabID {
     const newID = this.getNextTabID();
-    this.saveTab(newID, rawTab);
+    this.saveTab(newID, tabData);
     return newID;
   }
 
-  saveTab(tabID: TabID, rawTab: RawTab) {
+  saveTab(tabID: TabID, tabData: SavedTabData) {
     const key = StoredData.TabPrefix + tabID;
-    this.storage.setItem(key, rawTab);
+    this.storage.setItem(key, JSON.stringify(tabData));
   }
 }

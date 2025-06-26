@@ -1,0 +1,49 @@
+<div class="guitar-container min-w-full flex flex-col px-4 py-2.5 gap-1.5 items-center-safe">
+  <div class="settings-list flex flex-wrap gap-x-2.5 px-2.5 text-xs">
+    <div class="setting gap-1.5">
+      <p class="label">Key:</p>
+      <select name="key" [value]="key()" (change)="handleKeyChange($event)">
+        <option value="">Unset</option>
+        @for (note of octaveNotes; track $index) {
+          <option [value]="note">{{ note }}</option>
+        }
+      </select>
+    </div>
+    <div class="setting gap-1.5">
+      <p class="label">Show:</p>
+      <select name="viewMode" [(ngModel)]="viewMode" class="p-0.5">
+        <option value="number">fret numbers</option>
+        <option value="note">notes</option>
+      </select>
+    </div>
+  </div>
+  <div class="guitar flex gap-2 p-2">
+    <div class="tuning flex flex-col gap-1">
+      @for (note of tuning(); track $index) {
+        <button class="cursor-pointer font-bold hover:text-blue-400">
+          {{ note }}
+        </button>
+      }
+    </div>
+    <div class="overflow-x-auto grow shrink-0">
+      <div class="fretboard grid gap-1">
+        @for (stringFretArray of fretboardArray(); track $index; let line = $index) {
+          <div class="flex gap-1">
+            @for (fret of stringFretArray; track $index; let col = $index) {
+              <button
+                class="cursor-pointer w-6 h-6 rounded-md text-sm bg-gray-900 hover:bg-gray-800"
+                (click)="handleNoteTap(line, col)"
+              >
+                {{ fret }}
+              </button>
+            }
+          </div>
+        }
+      </div>
+    </div>
+  </div>
+  <p class="text-xs text-center">
+    To change tuning, click or tap the notes on the left.
+  </p>
+  <p class="text-xs text-center">Selecting a <strong>key</strong> will highlight the notes that belong to it.</p>
+</div>

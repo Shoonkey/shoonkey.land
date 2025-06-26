@@ -1,36 +1,109 @@
 import { Component, inject, signal } from "@angular/core";
 
-import { ParsedTab, Tuning } from "../../common/tabbing.types";
+import {
+  FretPosition,
+  Instrument,
+  TabData,
+  Tuning,
+} from "../../components/tabbing/common/tabbing.types";
 import { TabComponent } from "../../components/tabbing/tab/tab.component";
-import { GuitarFretboardComponent } from "../../components/tabbing/guitar-fretboard/guitar-fretboard.component";
+import { FretboardComponent } from "../../components/tabbing/fretboard/fretboard.component";
 import { TabStorageManagerService } from "../../services/tab-storage-manager/tab-storage-manager.service";
-import { TabParserService } from "../../services/tab-parser/tab-parser.service";
+
+interface TabDefaults {
+  instrument: Instrument;
+  tuning: Tuning;
+  fretAmount: number;
+}
 
 @Component({
   selector: "app-tabbing-tool",
-  imports: [TabComponent, GuitarFretboardComponent],
+  imports: [TabComponent, FretboardComponent],
   templateUrl: "./tabbing-tool.component.html",
   styleUrl: "./tabbing-tool.component.css",
 })
 export class TabbingToolComponent {
   private tabStorageManager = inject(TabStorageManagerService);
-  private tabParser = inject(TabParserService);
+  // private tabParser = inject(TabParserService);
 
-  standardTuning: Tuning = "EADGBE".split("");
   savedTabIDs = this.tabStorageManager.getTabIDs();
 
-  activeTab = signal<ParsedTab | null>(null);
+  activeTabData = signal<TabData | null>(null);
+  chordMode = signal<boolean>(false);
+  editingColumn = signal<number | null>(null);
+  error = signal<string | null>(null);
 
-  openTab(tabIdx: number) {
-    const rawTab = this.tabStorageManager.getTabByID(tabIdx);
+  defaults: TabDefaults = {
+    instrument: "guitar",
+    tuning: this.getStandardTuning("guitar"),
+    fretAmount: 22,
+  };
 
-    if (!rawTab) {
+  constructor() {
+    this.startNewTab();
+  }
+
+  openTab(tabId: number) {
+    const savedTabData = this.tabStorageManager.getTabByID(tabId);
+
+    if (!savedTabData) {
       // TODO: show error about tab not being available
       return;
     }
 
-    const parsedTab = this.tabParser.parseTab(rawTab);
-    this.activeTab.set(parsedTab);
+    // TODO: Implement advanced parsing for playback purposes
+    // const parsedTab = this.tabParser.parseTab(savedTabData.tab);
+
+    this.activeTabData.set(savedTabData);
+  }
+
+  updateTab(pos: FretPosition) {
+    const col = this.editingColumn();
+
+    this.activeTabData.update((data) => {
+      if (!data || col === null) return null;
+
+      data.tab[pos.stringLine][col] = String(pos.fretNum);
+
+      return data;
+    });
+  }
+
+  updateEditingColumn(idx: number) {
+    this.editingColumn.set(idx);
+  }
+
+  getPlaceholderTabContent(lineCount: number) {
+    const tabContent = [];
+
+    for (let i = 0; i < lineCount; i++) {
+      const line = "-----".split("");
+      tabContent.push(line);
+    }
+
+    return tabContent;
+  }
+
+  startNewTab() {
+    const { instrument, tuning } = this.defaults;
+    const tab = this.getPlaceholderTabContent(tuning.length);
+
+    const newTab: TabData = {
+      instrument,
+      tuning,
+      tab,
+    };
+
+    this.activeTabData.set(newTab);
+  }
+
+  getStandardTuning(instrument: Instrument): Tuning {
+    switch (instrument) {
+      case "guitar":
+        return "EADGBE".split("") as Tuning;
+      case "uke":
+        return "GCEA".split("") as Tuning;
+    }
   }
 
   // TODO: Add manual reload button in the page HTML

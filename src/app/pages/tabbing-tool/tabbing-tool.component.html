@@ -10,17 +10,29 @@
 <!-- TODO: List available tabs saved locally. Open them on click -->
 
 <div class="tab-container flex justify-center">
-  @let tab = activeTab();
-  @if (tab) {
-    <app-tab [tab]="tab" [tuning]="standardTuning" />
+  @let err = error();
+  @let tab = activeTabData();
+
+  @if (err) {
+    <p class="text-red-400 text-xs">{{ err }}</p>
+  } @else if (tab) {
+    <app-tab
+      [tabData]="tab"
+      [chordMode]="chordMode()"
+      [selectedColumn]="editingColumn()"
+      (onColumnClick)="updateEditingColumn($event)"
+    />
   } @else {
     <p class="text-sm text-purple-300">No tab is active right now</p>
+    <button (click)="startNewTab()">Create new tab</button>
   }
 </div>
 <!-- TODO: <app-shortcut-list /> -->
 
 <!-- TODO: Tapping a note on the fretboard should modify the tab accordingly -->
-<app-guitar-fretboard
-  [readableTuning]="standardTuning"
-  [fretAmount]="22"
+<app-fretboard
+  [instrument]="tab?.instrument || defaults.instrument"
+  [tuning]="defaults.tuning"
+  [fretAmount]="defaults.fretAmount"
+  (fretTapped)="updateTab($event)"
 />

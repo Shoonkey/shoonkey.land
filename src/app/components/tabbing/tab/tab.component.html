@@ -1,13 +1,27 @@
+@let col = selectedColumn();
 <div class="flex gap-1 text-white">
-  <ul class="tuning flex flex-col font-bold">
-    @for (note of tuning(); track $index) {
+  <ul class="tuning flex flex-col gap-1 font-bold">
+    @for (note of tabData().tuning; track $index) {
       <li>{{ note }}</li>
     }
   </ul>
   <div aria-hidden="true" class="w-[1px] bg-white"></div>
-  <ul class="music-fridge flex gap-0.5">
-    @for (line of tab(); track $index) {
-      <li><button class="flex flex-col"></button></li>
+  <div class="flex flex-col gap-1">
+    @for (line of tabData().tab; track $index) {
+      <ul class="music-fridge flex gap-0.5">
+        @for (numStr of line; track $index; let _col = $index) {
+          <li>
+            <button
+              [class.active]="col === _col"
+              [class.big-num]="numStr.length > 1"
+              (click)="updateSelectedColumn(_col)"
+              class="tab-element font-mono text-md flex h-full items-center px-1.5 rounded-sm cursor-pointer bg-gray-600 hover:bg-gray-700"
+            >
+              {{ numStr }}
+            </button>
+          </li>
+        }
+      </ul>
     }
-  </ul>
+  </div>
 </div>
