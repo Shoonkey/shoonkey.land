@@ -16,6 +16,11 @@ export class TabComponent {
   onColumnClick = output<number>();
 
   reversedTuning = computed(() => this.tabData().tuning.reverse());
+  tabLineStyles = computed(() => {
+    const lineLength = this.tabData().tab[0].length;
+    const btnLength = "2ch";
+    return { gridTemplateColumns: `repeat(${lineLength}, ${btnLength})` };
+  });
 
   updateSelectedColumn(idx: number) {
     this.onColumnClick.emit(idx);

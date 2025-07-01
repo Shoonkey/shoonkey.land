@@ -1,6 +1,8 @@
 :host {
-  width: var(--content-width);
+  display: flex;
+  flex-direction: column;
   flex-grow: 1;
+  width: var(--content-width);
 
   /* allows route transitions to work without stacking content */
   position: relative;
