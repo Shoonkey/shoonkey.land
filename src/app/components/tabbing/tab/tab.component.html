@@ -25,3 +25,14 @@
     }
   </div>
 </div>
+
+@let saveable = hasTabChanged();
+<button
+  app-button
+  [ariaDisabled]="!saveable"
+  [class.active]="saveable"
+  class="save-btn"
+  (click)="requestTabSave()"
+>
+  Save
+</button>

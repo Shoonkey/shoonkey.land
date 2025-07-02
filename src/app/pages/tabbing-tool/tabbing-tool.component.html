@@ -15,26 +15,29 @@
     @let err = error();
     @let tab = activeTabData();
 
-    @if (err) {
-      <p class="text-red-400 text-xs">{{ err }}</p>
-    } @else if (!tab) {
+    @if (!tab) {
       <p class="text-sm text-purple-300">No tab is active right now</p>
-      <button (click)="startNewTab()">Create new tab</button>
+      <button app-button (click)="openNewTab()">Create new tab</button>
     } @else {
       <app-tab
         [tabData]="tab"
         [chordMode]="chordMode()"
         [selectedColumn]="editingColumn()"
         (onColumnClick)="updateEditingColumn($event)"
+        [hasTabChanged]="hasTabChanged()"
+        (onSaveRequest)="saveTab()"
       />
+    }
+
+    @if (err) {
+      <p class="block mt-3 text-red-400 text-xs">{{ err }}</p>
     }
   </div>
 </div>
 
-<!-- TODO: Tapping a note on the fretboard should modify the tab accordingly -->
 <app-fretboard
   [instrument]="tab?.instrument || defaults.instrument"
   [tuning]="defaults.tuning"
   [fretAmount]="defaults.fretAmount"
-  (fretTapped)="updateTab($event)"
+  (fretTapped)="updateCurrentTab($event)"
 />

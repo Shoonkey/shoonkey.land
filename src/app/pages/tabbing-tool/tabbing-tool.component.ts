@@ -4,11 +4,14 @@ import {
   FretPosition,
   Instrument,
   TabData,
+  TabID,
   Tuning,
 } from "../../components/tabbing/common/tabbing.types";
 import { TabComponent } from "../../components/tabbing/tab/tab.component";
 import { FretboardComponent } from "../../components/tabbing/fretboard/fretboard.component";
 import { TabStorageManagerService } from "../../services/tab-storage-manager/tab-storage-manager.service";
+import { ButtonComponent } from "../../components/button/button.component";
+import { TabbingToolError, TabbingToolErrorCode } from "./tabbing-tool.error";
 
 interface TabDefaults {
   instrument: Instrument;
@@ -18,7 +21,7 @@ interface TabDefaults {
 
 @Component({
   selector: "app-tabbing-tool",
-  imports: [TabComponent, FretboardComponent],
+  imports: [TabComponent, FretboardComponent, ButtonComponent],
   templateUrl: "./tabbing-tool.component.html",
   styleUrl: "./tabbing-tool.component.css",
 })
@@ -26,9 +29,9 @@ export class TabbingToolComponent {
   private tabStorageManager = inject(TabStorageManagerService);
   // private tabParser = inject(TabParserService);
 
-  savedTabIDs = this.tabStorageManager.getTabIDs();
-
+  savedTabIDs = signal<TabID[]>(this.tabStorageManager.getTabIDs());
   activeTabData = signal<TabData | null>(null);
+  hasTabChanged = signal<boolean>(false);
   chordMode = signal<boolean>(false);
   editingColumn = signal<number | null>(null);
   error = signal<string | null>(null);
@@ -39,41 +42,56 @@ export class TabbingToolComponent {
     fretAmount: 22,
   };
 
-  constructor() {
-    this.startNewTab();
+  changeActiveTab(tabData: TabData) {
+    if (!!tabData.id && this.activeTabData()?.id === tabData.id) return;
+
+    this.error.set(null);
+    this.hasTabChanged.set(false);
+    this.activeTabData.set(tabData);
   }
 
-  openTab(tabId: number) {
+  openNewTab() {
+    const newTab = this.getBlankTab();
+    this.changeActiveTab(newTab);
+  }
+
+  openTabById(tabId: number) {
     const savedTabData = this.tabStorageManager.getTabByID(tabId);
 
     if (!savedTabData) {
-      // TODO: show error about tab not being available
+      this.error.set(
+        TabbingToolError.getErrorMessage(TabbingToolErrorCode.TabNotFound),
+      );
+
       return;
     }
 
-    // TODO: Implement advanced parsing for playback purposes
-    // const parsedTab = this.tabParser.parseTab(savedTabData.tab);
-
-    this.activeTabData.set(savedTabData);
+    this.changeActiveTab(savedTabData);
   }
 
-  updateTab(pos: FretPosition) {
+  updateCurrentTab(pos: FretPosition) {
     const col = this.editingColumn();
+    const data = this.activeTabData();
 
-    this.activeTabData.update((data) => {
-      if (!data || col === null) return null;
+    if (!col || !data) return;
 
-      data.tab[pos.stringLine][col] = String(pos.fretNum);
+    data.tab[pos.stringLine][col] = String(pos.fretNum);
 
-      return data;
-    });
+    this.hasTabChanged.set(true);
+    this.error.set(null);
+    this.activeTabData.set(data);
   }
 
   updateEditingColumn(idx: number) {
-    this.editingColumn.set(idx);
+    this.editingColumn.update((currIdx) => {
+      // Clicking on an already-selected column means unselecting it
+      if (currIdx === idx) return null;
+
+      return idx;
+    });
   }
 
-  getPlaceholderTabContent(lineCount: number) {
+  getBlankTabContent(lineCount: number) {
     const tabContent = [];
 
     for (let i = 0; i < lineCount; i++) {
@@ -84,9 +102,9 @@ export class TabbingToolComponent {
     return tabContent;
   }
 
-  startNewTab() {
+  getBlankTab() {
     const { instrument, tuning } = this.defaults;
-    const tab = this.getPlaceholderTabContent(tuning.length);
+    const tab = this.getBlankTabContent(tuning.length);
 
     const newTab: TabData = {
       instrument,
@@ -94,7 +112,16 @@ export class TabbingToolComponent {
       tab,
     };
 
-    this.activeTabData.set(newTab);
+    return newTab;
+  }
+
+  saveTab() {
+    const tabData = this.activeTabData();
+    const hasTabChanged = this.hasTabChanged();
+
+    if (!tabData || !hasTabChanged) return;
+
+    this.tabStorageManager.saveTab(tabData);
   }
 
   getStandardTuning(instrument: Instrument): Tuning {
@@ -106,8 +133,13 @@ export class TabbingToolComponent {
     }
   }
 
+  startTabPlayback() {
+    // TODO: Implement advanced parsing for playback purposes
+    // const parsedTab = this.tabParser.parseTab(savedTabData.tab);
+  }
+
   // TODO: Add manual reload button in the page HTML
   reloadLocalTabs() {
-    this.savedTabIDs = this.tabStorageManager.getTabIDs();
+    this.savedTabIDs.set(this.tabStorageManager.getTabIDs());
   }
 }

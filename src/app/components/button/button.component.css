@@ -1,0 +1,13 @@
+:host {
+  background: var(--color-purple-600);
+  font-size: var(--text-sm);
+  border-radius: var(--radius-md);
+  padding-inline: 0.65rem;
+  padding-block: 0.2rem;
+  color: black;
+  cursor: pointer;
+
+  &:hover {
+    background: var(--color-purple-700);
+  }
+}

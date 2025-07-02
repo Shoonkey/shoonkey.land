@@ -27,14 +27,11 @@ export type TabID = number;
 export type Tuning = Note[];
 
 export interface TabData {
+  id?: TabID;
   key?: string;
   tuning: Tuning;
   instrument: Instrument;
   tab: string[][];
-}
-
-export interface SavedTabData extends TabData {
-  id: TabID;
 }
 
 export type Note =

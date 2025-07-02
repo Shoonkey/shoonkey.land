@@ -1,9 +1,6 @@
 import { Injectable } from "@angular/core";
 
-import {
-  SavedTabData,
-  TabID,
-} from "../../components/tabbing/common/tabbing.types";
+import { TabData, TabID } from "../../components/tabbing/common/tabbing.types";
 
 enum StoredData {
   NextTabID = "next-tab-id",
@@ -17,17 +14,21 @@ enum StoredData {
 export class TabStorageManagerService {
   private storage = localStorage;
 
-  getNextTabID(): TabID {
+  pickNewTabID(): TabID {
     const defaultNextID = 1;
 
     const rawData = this.storage.getItem(StoredData.NextTabID) || "";
     const parsedID = parseInt(rawData, 10);
 
-    return isNaN(parsedID) ? defaultNextID : parsedID;
+    const newTabID = isNaN(parsedID) ? defaultNextID : parsedID;
+
+    this.storage.setItem(StoredData.NextTabID, (newTabID + 1).toString());
+
+    return newTabID;
   }
 
-  getAllSavedTabs(): SavedTabData[] {
-    const tabs: SavedTabData[] = [];
+  getAllSavedTabs(): TabData[] {
+    const tabs: TabData[] = [];
 
     for (const tabID of this.getTabIDs()) {
       const tab = this.getTabByID(tabID);
@@ -48,13 +49,13 @@ export class TabStorageManagerService {
     return commaSeparatedIDs.split(",").map(parseInt);
   }
 
-  getTabByID(tabID: TabID): SavedTabData | null {
+  getTabByID(tabID: TabID): TabData | null {
     const key = StoredData.TabPrefix + tabID;
     const data = this.storage.getItem(key);
 
     if (!data) return null;
 
-    return JSON.parse(data) as SavedTabData;
+    return JSON.parse(data) as TabData;
   }
 
   removeTabID(tabID: TabID) {
@@ -72,13 +73,8 @@ export class TabStorageManagerService {
     this.storage.removeItem(key);
   }
 
-  saveNewTab(tabData: SavedTabData): TabID {
-    const newID = this.getNextTabID();
-    this.saveTab(newID, tabData);
-    return newID;
-  }
-
-  saveTab(tabID: TabID, tabData: SavedTabData) {
+  saveTab(tabData: TabData) {
+    const tabID: TabID = tabData.id || this.pickNewTabID();
     const key = StoredData.TabPrefix + tabID;
     this.storage.setItem(key, JSON.stringify(tabData));
   }
