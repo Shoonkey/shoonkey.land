@@ -118,7 +118,7 @@ export class TabParserService {
     for (let columnIdx = 0; columnIdx < lineLength; columnIdx++) {
       if (!this.columnHasChord(lines, columnIdx)) continue;
 
-      // TODO: Make sure the parsing occurs correctly
+      // TODO(future/playback): Make sure the parsing occurs correctly
       const { chord, nextSearchIdx } = this.parseChord(lines, columnIdx);
       columnIdx = nextSearchIdx;
 

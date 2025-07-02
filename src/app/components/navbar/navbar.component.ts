@@ -3,7 +3,7 @@ import { RouterLink } from "@angular/router";
 
 import { NavbarService } from "../../services/navbar/navbar.service";
 
-// TODO: Add animation for entering and leaving view
+// TODO(fix/ux): Add animation for entering and leaving view
 @Component({
   selector: "app-navbar",
   imports: [RouterLink],

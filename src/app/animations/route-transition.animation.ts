@@ -15,7 +15,7 @@ const styles = {
 
 const speed = "0.3s";
 
-// TODO: Fix homepage not fading out on route transition
+// TODO(fix/ux): Fix homepage not fading out on route transition
 
 // should be applied to the parent of the router-outlet component
 export const routeTransition = trigger("routeTransition", [

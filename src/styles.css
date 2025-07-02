@@ -24,7 +24,7 @@
 }
 
 @layer theme {
-  /* TODO: Change these according to user theme settings */
+  /* TODO(future/theming): Change these according to user theme settings */
   :root {
     --primary-bg-color: #272932;
     --secondary-bg-color: #333333;

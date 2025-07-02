@@ -48,5 +48,5 @@ export type Note =
   | "A#"
   | "B";
 
-// TODO: bring this back when playback is to be implemented
+// TODO(future/playback): bring this back when playback is to be implemented
 export type ParsedTab = ChordLike[];
