@@ -1,51 +1,47 @@
 @import "tailwindcss";
 
-html,
-body,
-h1,
-h2,
-h3,
-h4,
-h5,
-h6,
-p,
-ul {
-  margin: 0;
-  padding: 0;
+@layer base {
+  html {
+    width: 100%;
+  }
+
+  body {
+    background: var(--primary-bg-color);
+    color: var(--text-color);
+    font-family: var(--font-family);
+    font-size: var(--font-size);
+  }
+
+  :where(html, body, h1, h2, h3, h4, h5, h6, p, ul) {
+    margin: 0;
+    padding: 0;
+  }
+
+  a {
+    color: var(--link-color);
+    text-decoration: underline;
+  }
 }
 
-/* TODO: Change these according to user theme settings */
-:root {
-  --primary-bg-color: #272932;
-  --secondary-bg-color: #333333;
-  --highlight-color: #d64045;
-  --link-color: #e2787c;
-  --text-color: #a3a3a3;
-  --font-family: "Noto Sans", sans-serif;
-  --font-size: 16px;
-  --content-width: 100dvw;
-  --scrollbar-thumb-color: var(--color-purple-900);
-  --scrollbar-track-color: var(--color-gray-900);
+@layer theme {
+  /* TODO: Change these according to user theme settings */
+  :root {
+    --primary-bg-color: #272932;
+    --secondary-bg-color: #333333;
+    --highlight-color: #d64045;
+    --link-color: #e2787c;
+    --text-color: #a3a3a3;
+    --font-family: "Noto Sans", sans-serif;
+    --font-size: 16px;
+    --content-width: 100dvw;
+    --scrollbar-thumb-color: var(--color-purple-900);
+    --scrollbar-track-color: var(--color-gray-900);
+  }
 }
 
-html {
-  width: 100%;
-}
-
-body {
-  background: var(--primary-bg-color);
-  color: var(--text-color);
-  font-family: var(--font-family);
-  font-size: var(--font-size);
-}
-
-
-.custom-scrollbar {
-  scrollbar-width: thin;
-  scrollbar-color: var(--scrollbar-thumb-color) var(--scrollbar-track-color);
-}
-
-a {
-  color: var(--link-color);
-  text-decoration: underline;
+@layer utilities {
+  .custom-scrollbar {
+    scrollbar-width: thin;
+    scrollbar-color: var(--scrollbar-thumb-color) var(--scrollbar-track-color);
+  }
 }
