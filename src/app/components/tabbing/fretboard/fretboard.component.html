@@ -4,6 +4,7 @@
   <div class="settings-list flex flex-wrap gap-x-2.5 px-2.5 text-xs">
     <div class="setting gap-1.5">
       <p class="label">Key:</p>
+      <!-- TODO: this might be achievable through [(model)] syntax -->
       <select name="key" [value]="key()" (change)="handleKeyChange($event)">
         <option value="">Unset</option>
         @for (note of octaveNotes; track $index) {
@@ -27,6 +28,8 @@
         </button>
       }
     </div>
+    <!-- TODO: Add modifiers for pull-offs, hammer-ons, etc. -->
+    <!-- TODO: key-based fret highlighting -->
     <div class="fretboard custom-scrollbar pb-1 overflow-x-auto grid gap-1">
       @for (
         stringFretArray of fretboardArray();

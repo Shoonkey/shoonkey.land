@@ -6,6 +6,8 @@
     }
   </ul>
   <div aria-hidden="true" class="w-[1px] bg-white"></div>
+  <!-- TODO: Add ability to clear selected column -->
+  <!-- TODO: Add ability to add/remove columns close to the selected column -->
   <div class="tab-content custom-scrollbar gap-1 pb-1">
     @for (line of tabData().tab; track $index) {
       <ul class="tab-line" [style]="tabLineStyles()">
