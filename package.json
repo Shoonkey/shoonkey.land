@@ -8,7 +8,6 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "test:headless": "ng test --no-watch --no-progress --browsers=ChromeHeadless",
-    "serve:ssr:shoonkey.land": "node dist/shoonkey.land/server/server.mjs",
     "lint": "prettier . --write"
   },
   "private": true,
