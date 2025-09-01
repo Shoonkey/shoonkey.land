@@ -1,0 +1,32 @@
+@let col = selectedColumn();
+<div class="sheet custom-scrollbar gap-1 pb-1">
+  @for (line of content(); track $index) {
+    <ul
+      class="sheet-line"
+      [style.gridTemplateColumns]="`repeat(${lineLength()}, 2ch)`"
+    >
+      @for (str of line; track $index; let _col = $index) {
+        <li>
+          <button
+            class="sheet-element font-mono rounded-sm bg-gray-600 hover:bg-gray-700"
+            [class.active]="col === _col"
+            [class.big-num]="str.length > 1"
+            (click)="onColumnUpdate.emit(_col)"
+          >
+            {{ str }}
+          </button>
+        </li>
+      }
+    </ul>
+  }
+</div>
+
+@let saveable = hasTabChanged();
+<button
+  class="themed save-btn"
+  [ariaDisabled]="!saveable"
+  [class.active]="saveable"
+  (click)="onSaveRequest.emit()"
+>
+  Save
+</button>

@@ -4,24 +4,20 @@ import {
   FretPosition,
   Instrument,
   TabData,
+  TabDefaults,
   TabID,
   Tuning,
 } from "../../components/tabbing/common/tabbing.types";
-import { TabComponent } from "../../components/tabbing/tab/tab.component";
 import { FretboardComponent } from "../../components/tabbing/fretboard/fretboard.component";
 import { TabStorageManagerService } from "../../services/tab-storage-manager/tab-storage-manager.service";
-import { ButtonComponent } from "../../components/button/button.component";
+import { TabTuningComponent } from "../../components/tabbing/tab-tuning/tab-tuning.component";
+import { TabSheetComponent } from "../../components/tabbing/tab-sheet/tab-sheet.component";
 import { TabbingToolError, TabbingToolErrorCode } from "./tabbing-tool.error";
-
-interface TabDefaults {
-  instrument: Instrument;
-  tuning: Tuning;
-  fretAmount: number;
-}
+import { TabUtility } from "../../components/tabbing/common/tabbing.util";
 
 @Component({
   selector: "app-tabbing-tool",
-  imports: [TabComponent, FretboardComponent, ButtonComponent],
+  imports: [FretboardComponent, TabTuningComponent, TabSheetComponent],
   templateUrl: "./tabbing-tool.component.html",
   styleUrl: "./tabbing-tool.component.css",
 })
@@ -32,15 +28,10 @@ export class TabbingToolComponent {
   savedTabIDs = signal<TabID[]>(this.tabStorageManager.getTabIDs());
   activeTabData = signal<TabData | null>(null);
   hasTabChanged = signal<boolean>(false);
-  chordMode = signal<boolean>(false);
   editingColumn = signal<number | null>(null);
   error = signal<string | null>(null);
 
-  defaults: TabDefaults = {
-    instrument: "guitar",
-    tuning: this.getStandardTuning("guitar"),
-    fretAmount: 22,
-  };
+  defaults = TabUtility.defaults;
 
   changeActiveTab(tabData: TabData) {
     if (!!tabData.id && this.activeTabData()?.id === tabData.id) return;
@@ -51,7 +42,7 @@ export class TabbingToolComponent {
   }
 
   openNewTab() {
-    const newTab = this.getBlankTab();
+    const newTab = TabUtility.getBlankTab();
     this.changeActiveTab(newTab);
   }
 
@@ -73,12 +64,18 @@ export class TabbingToolComponent {
     const col = this.editingColumn();
     const data = this.activeTabData();
 
-    if (!col || !data) return;
+    if (col === null || !data) return;
 
-    data.tab[pos.stringLine][col] = String(pos.fretNum);
-
-    this.hasTabChanged.set(true);
     this.error.set(null);
+
+    this.hasTabChanged.update((currentChanged) => {
+      if (data.content[pos.stringLine][col] === String(pos.fretNum))
+        return currentChanged;
+
+      data.content[pos.stringLine][col] = String(pos.fretNum);
+      return true;
+    });
+
     this.activeTabData.set(data);
   }
 
@@ -91,30 +88,6 @@ export class TabbingToolComponent {
     });
   }
 
-  getBlankTabContent(lineCount: number) {
-    const tabContent = [];
-
-    for (let i = 0; i < lineCount; i++) {
-      const line = "-----".split("");
-      tabContent.push(line);
-    }
-
-    return tabContent;
-  }
-
-  getBlankTab() {
-    const { instrument, tuning } = this.defaults;
-    const tab = this.getBlankTabContent(tuning.length);
-
-    const newTab: TabData = {
-      instrument,
-      tuning,
-      tab,
-    };
-
-    return newTab;
-  }
-
   saveTab() {
     const tabData = this.activeTabData();
     const hasTabChanged = this.hasTabChanged();
@@ -122,15 +95,7 @@ export class TabbingToolComponent {
     if (!tabData || !hasTabChanged) return;
 
     this.tabStorageManager.saveTab(tabData);
-  }
-
-  getStandardTuning(instrument: Instrument): Tuning {
-    switch (instrument) {
-      case "guitar":
-        return "EADGBE".split("") as Tuning;
-      case "uke":
-        return "GCEA".split("") as Tuning;
-    }
+    this.hasTabChanged.set(false);
   }
 
   startTabPlayback() {

@@ -21,16 +21,20 @@
     </div>
   </div>
   <div class="guitar max-w-full flex gap-2 p-2">
-    <div class="tuning flex flex-col gap-1">
+    <div class="tuning flex flex-col-reverse">
       @for (note of tuning(); track $index) {
-        <button class="cursor-pointer font-bold hover:text-blue-400">
+        <button
+          class="cursor-pointer flex justify-center h-full font-bold hover:text-blue-400"
+        >
           {{ note }}
         </button>
       }
     </div>
     <!-- TODO: Add modifiers for pull-offs, hammer-ons, etc. -->
     <!-- TODO: key-based fret highlighting -->
-    <div class="fretboard custom-scrollbar pb-1 overflow-x-auto grid gap-1">
+    <div
+      class="fretboard custom-scrollbar pb-1 overflow-x-auto flex flex-col-reverse gap-1"
+    >
       @for (
         stringFretArray of fretboardArray();
         track $index;

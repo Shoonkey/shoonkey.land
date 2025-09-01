@@ -31,11 +31,32 @@
     --highlight-color: #d64045;
     --link-color: #e2787c;
     --text-color: #a3a3a3;
+    --button-background: var(--color-purple-600);
+    --button-hover-background: var(--color-purple-700);
+
     --font-family: "Noto Sans", sans-serif;
     --font-size: 16px;
+
     --content-width: 100dvw;
     --scrollbar-thumb-color: var(--color-purple-900);
     --scrollbar-track-color: var(--color-gray-900);
+  }
+}
+
+@layer components {
+  button.themed {
+    background: var(--button-background);
+
+    font-size: var(--text-sm);
+    border-radius: var(--radius-md);
+    padding-inline: 0.65rem;
+    padding-block: 0.2rem;
+    color: black;
+    cursor: pointer;
+
+    &:hover {
+      background: var(--button-hover-background);
+    }
   }
 }
 

@@ -5,7 +5,7 @@ export enum TabbingToolErrorCode {
 export class TabbingToolError {
   static errorMessages: Record<TabbingToolErrorCode, string> = {
     [TabbingToolErrorCode.TabNotFound]:
-      "Unable to find tab on the local storage of your device. Sorry :c",
+      "Unable to find tab on your device. Sorry :c",
   };
 
   static getErrorMessage(code: TabbingToolErrorCode) {

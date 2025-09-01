@@ -11,33 +11,37 @@
 
   <!-- TODO: List available tabs saved locally. Open them on click -->
 
-  <div class="tab-container my-auto box-border text-center">
-    @let err = error();
-    @let tab = activeTabData();
-
-    @if (!tab) {
-      <p class="text-sm text-purple-300">No tab is active right now</p>
-      <button app-button (click)="openNewTab()">Create new tab</button>
+  <div class="workspace">
+    @let activeTab = activeTabData();
+    @if (!activeTab) {
+      <div class="empty-workspace-notice">
+        <p class="text-sm text-purple-300">No tab is active right now</p>
+        <button class="themed" (click)="openNewTab()">Create new tab</button>
+      </div>
     } @else {
-      <app-tab
-        [tabData]="tab"
-        [chordMode]="chordMode()"
-        [selectedColumn]="editingColumn()"
-        (onColumnClick)="updateEditingColumn($event)"
-        [hasTabChanged]="hasTabChanged()"
-        (onSaveRequest)="saveTab()"
-      />
+      <div class="tab flex gap-1">
+        <app-tab-tuning [tuning]="activeTab.tuning" />
+        <div aria-hidden="true" class="w-[1px] bg-white"></div>
+        <app-tab-sheet
+          [content]="activeTab.content"
+          [hasTabChanged]="hasTabChanged()"
+          [selectedColumn]="editingColumn()"
+          (onColumnUpdate)="updateEditingColumn($event)"
+          (onSaveRequest)="saveTab()"
+        />
+      </div>
     }
 
+    @let err = error();
     @if (err) {
-      <p class="block mt-3 text-red-400 text-xs">{{ err }}</p>
+      <p class="error-notice block mt-3 text-red-400 text-xs">{{ err }}</p>
     }
   </div>
 </div>
 
 <app-fretboard
-  [instrument]="tab?.instrument || defaults.instrument"
-  [tuning]="defaults.tuning"
+  [instrument]="activeTab?.instrument || defaults.instrument"
+  [tuning]="activeTab?.tuning || defaults.tuning"
   [fretAmount]="defaults.fretAmount"
   (fretTapped)="updateCurrentTab($event)"
 />

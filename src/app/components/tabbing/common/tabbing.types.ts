@@ -31,7 +31,7 @@ export interface TabData {
   key?: string;
   tuning: Tuning;
   instrument: Instrument;
-  tab: string[][];
+  content: string[][];
 }
 
 export type Note =
@@ -50,3 +50,9 @@ export type Note =
 
 // TODO(future/playback): bring this back when playback is to be implemented
 export type ParsedTab = ChordLike[];
+
+export interface TabDefaults {
+  instrument: Instrument;
+  tuning: Tuning;
+  fretAmount: number;
+}
