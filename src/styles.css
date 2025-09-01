@@ -21,6 +21,10 @@
     color: var(--link-color);
     text-decoration: underline;
   }
+
+  button {
+    cursor: pointer;
+  }
 }
 
 @layer theme {
@@ -52,7 +56,6 @@
     padding-inline: 0.65rem;
     padding-block: 0.2rem;
     color: black;
-    cursor: pointer;
 
     &:hover {
       background: var(--button-hover-background);

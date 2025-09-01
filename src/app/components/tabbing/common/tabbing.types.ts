@@ -1,24 +1,4 @@
-export type ModifierType =
-  | "strumUp"
-  | "strumDown"
-  | "hammerOn"
-  | "pullOff"
-  | "bend"
-  | "preBend";
-
-export type FretModifierFlags = Partial<Record<ModifierType, boolean>>;
-
-export interface Fret {
-  fretNumber: number;
-  modifiers: FretModifierFlags;
-}
-
-export interface FretPosition {
-  stringLine: number;
-  fretNum: number;
-}
-
-export type ChordLike = Fret[];
+type Saved<T> = T & { id: TabID };
 
 export type Instrument = "guitar" | "uke";
 
@@ -26,13 +6,19 @@ export type TabID = number;
 
 export type Tuning = Note[];
 
-export interface TabData {
-  id?: TabID;
-  key?: string;
+export type TabContent = string[][];
+
+export interface TabMetadata {
   tuning: Tuning;
   instrument: Instrument;
-  content: string[][];
+  title?: string;
+  key?: string;
 }
+
+export type TabData = TabMetadata & { content: TabContent };
+
+export type SavedTabMetadata = Saved<TabMetadata>;
+export type SavedTabData = Saved<TabData>;
 
 export type Note =
   | "C"
@@ -48,11 +34,13 @@ export type Note =
   | "A#"
   | "B";
 
-// TODO(future/playback): bring this back when playback is to be implemented
-export type ParsedTab = ChordLike[];
-
 export interface TabDefaults {
   instrument: Instrument;
   tuning: Tuning;
   fretAmount: number;
+}
+
+export interface FretPosition {
+  stringLine: number;
+  fretNum: number;
 }

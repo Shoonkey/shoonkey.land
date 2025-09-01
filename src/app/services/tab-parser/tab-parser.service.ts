@@ -5,7 +5,7 @@ import {
   Fret,
   FretModifierFlags,
   ParsedTab,
-} from "../../components/tabbing/common/tabbing.types";
+} from "../../components/tabbing/common/playback.types";
 import { TabParserValidator } from "./tab-parser.validator";
 import { FRET_NAMED_REGEX } from "./tab-parser.util";
 

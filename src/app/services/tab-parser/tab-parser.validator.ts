@@ -1,4 +1,4 @@
-import { FretModifierFlags } from "../../components/tabbing/common/tabbing.types";
+import { FretModifierFlags } from "../../components/tabbing/common/playback.types";
 import { TabValidationError, TabValidationErrorCode } from "./tab-parser.error";
 import { FRET_REGEX, hasDigit } from "./tab-parser.util";
 

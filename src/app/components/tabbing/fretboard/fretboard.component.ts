@@ -1,14 +1,9 @@
 import { Component, computed, input, model, output } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 
-import {
-  FretPosition,
-  Instrument,
-  Note,
-  Tuning,
-} from "../common/tabbing.types";
+import { FretPosition, Instrument, Note, Tuning } from "../common/tabbing.types";
 
-type FretLabel = string | number;
+type FretLabel = Note | number;
 type ViewMode = "note" | "number";
 
 @Component({
@@ -89,7 +84,7 @@ export class FretboardComponent {
   }
 
   getNoteArray(length: number, tuningNoteIdx: number) {
-    const noteArray = new Array<string>(length);
+    const noteArray = new Array<Note>(length);
 
     for (let i = 0; i < length; i++)
       noteArray[i] = this.getNoteFromPosition(this.tuning()[tuningNoteIdx], i);

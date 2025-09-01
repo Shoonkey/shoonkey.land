@@ -1,10 +1,16 @@
 import { Injectable } from "@angular/core";
 
-import { TabData, TabID } from "../../components/tabbing/common/tabbing.types";
+import {
+  SavedTabData,
+  TabContent,
+  TabID,
+  SavedTabMetadata,
+  TabData,
+} from "../../components/tabbing/common/tabbing.types";
+import { TabUtility } from "../../components/tabbing/common/tabbing.util";
 
 enum StoredData {
-  NextTabID = "next-tab-id",
-  TabIDs = "tab-ids",
+  TabMetadata = "tab-metadata",
   TabPrefix = "tab/",
 }
 
@@ -15,67 +21,71 @@ export class TabStorageManagerService {
   private storage = localStorage;
 
   pickNewTabID(): TabID {
-    const defaultNextID = 1;
+    const defaultFirstID = 1;
+    const metadata = this.getMetadata();
 
-    const rawData = this.storage.getItem(StoredData.NextTabID) || "";
-    const parsedID = parseInt(rawData, 10);
+    if (!metadata) return defaultFirstID;
 
-    const newTabID = isNaN(parsedID) ? defaultNextID : parsedID;
-
-    this.storage.setItem(StoredData.NextTabID, (newTabID + 1).toString());
-
-    return newTabID;
+    const lastSavedTabID = metadata[metadata.length - 1].id;
+    return lastSavedTabID + 1;
   }
 
-  getAllSavedTabs(): TabData[] {
-    const tabs: TabData[] = [];
+  getMetadata(): SavedTabMetadata[] | null {
+    const metadata = this.storage.getItem(StoredData.TabMetadata);
 
-    for (const tabID of this.getTabIDs()) {
-      const tab = this.getTabByID(tabID);
+    if (!metadata) return null;
 
-      if (!tab) continue;
-
-      tabs.push(tab);
+    try {
+      return JSON.parse(metadata) as SavedTabMetadata[];
+    } catch (e) {
+      console.error("Unable to parse tabs' metadata");
+      return null;
     }
-
-    return tabs;
   }
 
-  getTabIDs(): TabID[] {
-    const commaSeparatedIDs = this.storage.getItem(StoredData.TabIDs);
-
-    if (!commaSeparatedIDs) return [];
-
-    return commaSeparatedIDs.split(",").map(parseInt);
-  }
-
-  getTabByID(tabID: TabID): TabData | null {
+  getTabContentByID(tabID: TabID): TabContent | null {
     const key = StoredData.TabPrefix + tabID;
     const data = this.storage.getItem(key);
 
     if (!data) return null;
 
-    return JSON.parse(data) as TabData;
+    return JSON.parse(data) as TabContent;
   }
 
-  removeTabID(tabID: TabID) {
-    const tabIDs = this.getTabIDs();
-    const currentTabIndex = tabIDs.findIndex((id) => id === tabID);
+  removeTabMetadata(tabID: TabID) {
+    const tabsMetadata = this.getMetadata();
 
-    tabIDs.splice(currentTabIndex, 1);
-    this.storage.setItem(StoredData.TabIDs, tabIDs.join(","));
+    if (!tabsMetadata) return;
+
+    const targetTabIndex = tabsMetadata.findIndex((data) => data.id === tabID);
+
+    tabsMetadata.splice(targetTabIndex, 1);
+    this.storage.setItem(StoredData.TabMetadata, JSON.stringify(tabsMetadata));
   }
 
   removeTab(tabID: TabID) {
-    this.removeTabID(tabID);
+    this.removeTabMetadata(tabID);
 
     const key = StoredData.TabPrefix + tabID;
     this.storage.removeItem(key);
   }
 
-  saveTab(tabData: TabData) {
-    const tabID: TabID = tabData.id || this.pickNewTabID();
-    const key = StoredData.TabPrefix + tabID;
-    this.storage.setItem(key, JSON.stringify(tabData));
+  addMedatada(metadata: SavedTabMetadata) {
+    const m = this.getMetadata() || [];
+    m.push(metadata);
+    this.storage.setItem(StoredData.TabMetadata, JSON.stringify(m));
+  }
+
+  saveTab(tabData: TabData | SavedTabData) {
+    let id: TabID = TabUtility.isSavedTab(tabData)
+      ? tabData.id
+      : this.pickNewTabID();
+
+    const { key, tuning, instrument, content } = tabData;
+
+    this.addMedatada({ id, key, tuning, instrument });
+
+    const tabKey = StoredData.TabPrefix + id;
+    this.storage.setItem(tabKey, JSON.stringify(content));
   }
 }

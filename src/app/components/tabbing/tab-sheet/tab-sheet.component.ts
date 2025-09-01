@@ -1,6 +1,6 @@
 import { Component, computed, input, output } from "@angular/core";
 
-import { TabData } from "../common/tabbing.types";
+import { TabContent } from "../common/tabbing.types";
 
 @Component({
   selector: "app-tab-sheet",
@@ -9,7 +9,7 @@ import { TabData } from "../common/tabbing.types";
   styleUrl: "./tab-sheet.component.css",
 })
 export class TabSheetComponent {
-  content = input.required<TabData["content"]>();
+  content = input.required<TabContent>();
   hasTabChanged = input.required<boolean>();
   selectedColumn = input.required<number | null>();
 

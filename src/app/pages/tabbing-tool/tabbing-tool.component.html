@@ -8,15 +8,18 @@
     </p>
     <p class="text-xs">(alliteration is cool :3)</p>
   </div>
-
-  <!-- TODO: List available tabs saved locally. Open them on click -->
-
   <div class="workspace">
     @let activeTab = activeTabData();
     @if (!activeTab) {
       <div class="empty-workspace-notice">
         <p class="text-sm text-purple-300">No tab is active right now</p>
-        <button class="themed" (click)="openNewTab()">Create new tab</button>
+        <ul class="action-list">
+          @let selector = tabSelector();
+          <button class="themed" (click)="selector?.showModal()">
+            Open tab selector
+          </button>
+          <button class="themed" (click)="openNewTab()">Create new tab</button>
+        </ul>
       </div>
     } @else {
       <div class="tab flex gap-1">
@@ -45,3 +48,5 @@
   [fretAmount]="defaults.fretAmount"
   (fretTapped)="updateCurrentTab($event)"
 />
+
+<app-tab-selector (onReady)="tabSelector.set($event)" (onTabSelection)="handleTabSelection($event)" />

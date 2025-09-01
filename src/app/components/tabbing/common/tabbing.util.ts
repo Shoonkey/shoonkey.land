@@ -1,4 +1,10 @@
-import { Instrument, TabData, TabDefaults, Tuning } from "./tabbing.types";
+import {
+  Instrument,
+  SavedTabData,
+  TabData,
+  TabDefaults,
+  Tuning,
+} from "./tabbing.types";
 
 export class TabUtility {
   static defaults: TabDefaults = {
@@ -31,12 +37,16 @@ export class TabUtility {
     const { instrument, tuning } = this.defaults;
     const content = this.getBlankTabContent(tuning.length);
 
-    const newTab: TabData = {
+    const newTab = {
       instrument,
       tuning,
       content,
     };
 
     return newTab;
+  }
+
+  static isSavedTab(tab: TabData | SavedTabData): tab is SavedTabData {
+    return !!(tab as SavedTabData).id;
   }
 }

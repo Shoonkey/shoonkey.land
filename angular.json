@@ -85,7 +85,13 @@
               }
             ],
             "styles": ["src/styles.css"],
-            "scripts": []
+            "scripts": [],
+            "loader": {
+              ".svg": "text",
+              ".ttf": "text",
+              ".woff": "text",
+              ".woff2": "text"
+            }
           }
         }
       }

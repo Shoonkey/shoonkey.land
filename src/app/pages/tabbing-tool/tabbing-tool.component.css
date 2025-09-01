@@ -14,6 +14,14 @@
   align-items: center;
   gap: 0.25rem;
   margin: auto;
+  width: 100%;
+  max-width: 400px;
+
+  & .action-list {
+    display: flex;
+    gap: 0.25rem;
+    list-style-type: none;
+  }
 }
 
 .tab {

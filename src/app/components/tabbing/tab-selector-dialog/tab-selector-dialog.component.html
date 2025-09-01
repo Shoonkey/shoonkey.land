@@ -1,0 +1,22 @@
+@let dialog = dialogRef().nativeElement;
+<dialog #tabSelectorDialog open>
+  <div class="title-block">
+    <h1 class="title">Saved tabs on your device</h1>
+    <button class="close-icon" (click)="dialog.close()">
+      <app-icon name="x-circle" />
+    </button>
+  </div>
+  <ul class="tab-list">
+    @for (metadata of savedMetadata(); track $index; let idx = $index) {
+      <li>
+        <button class="tab-item" (click)="handleTabSelection(idx)">
+          <span class="title">{{ metadata.title }}</span>
+          <div class="small-details">
+            <span class="instrument">{{ metadata.instrument }}</span>
+            <span class="tuning">{{ metadata.tuning.join(" ") }}</span>
+          </div>
+        </button>
+      </li>
+    }
+  </ul>
+</dialog>
